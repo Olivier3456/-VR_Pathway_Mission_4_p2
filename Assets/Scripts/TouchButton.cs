@@ -12,7 +12,8 @@ public class TouchButton : XRBaseInteractable
     [SerializeField] private Material pressedMat;    
 
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip audioClip;
+
+    private NumberPad numberPad;
 
     private Material originalMat;
     private Renderer buttonRenderer;
@@ -22,9 +23,8 @@ public class TouchButton : XRBaseInteractable
     {
         buttonRenderer = GetComponent<Renderer>();
 
+        numberPad = GameObject.Find("Numberpad").GetComponent<NumberPad>();
        
-
-        //pressedMat = Resources.Load<Material>("Materials/ForegroundColour2");
         originalMat = buttonRenderer.material;
     }
 
@@ -33,7 +33,8 @@ public class TouchButton : XRBaseInteractable
         base.OnHoverEntered(args);
         
         buttonRenderer.material = pressedMat;
-        audioSource.Play();
+        audioSource?.Play();
+        numberPad.ButtonPressed(_buttonValue);
     }
 
 
@@ -43,7 +44,4 @@ public class TouchButton : XRBaseInteractable
 
         buttonRenderer.material = originalMat;
     }
-
-
-
 }
