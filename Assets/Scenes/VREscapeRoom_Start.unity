@@ -243,6 +243,7 @@ MonoBehaviour:
   codeDisplay: {fileID: 913876727}
   goodCodeAudioClip: {fileID: 8300000, guid: 0013ae7c6d355b24ead8a335afffab69, type: 3}
   wrongCodeAudioClip: {fileID: 8300000, guid: 3a65b1a05a2cf9e4989071a4516aba84, type: 3}
+  keyCard: {fileID: 199101110}
 --- !u!1 &160904738
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,6 +374,24 @@ MonoBehaviour:
   m_HapticHoverCancelIntensity: 0
   m_HapticHoverCancelDuration: 0
   m_AllowHoverHapticsWhileSelecting: 1
+--- !u!1 &199101110 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6252323771361804891, guid: 2733043e92e2f4d7eb534ec4f68223cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 6252323772187866546}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &199101116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 199101110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad7b3e5a0ed8d514c9f7ebb35ceb0589, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &226906169
 GameObject:
   m_ObjectHideFlags: 0
@@ -3189,6 +3208,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Keycard
       objectReference: {fileID: 0}
+    - target: {fileID: 6252323771361804891, guid: 2733043e92e2f4d7eb534ec4f68223cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6252323771361804893, guid: 2733043e92e2f4d7eb534ec4f68223cb,
         type: 3}
       propertyPath: m_RootOrder
@@ -3197,37 +3221,37 @@ PrefabInstance:
     - target: {fileID: 6252323771361804893, guid: 2733043e92e2f4d7eb534ec4f68223cb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.030871153
+      value: 0.1438
       objectReference: {fileID: 0}
     - target: {fileID: 6252323771361804893, guid: 2733043e92e2f4d7eb534ec4f68223cb,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.7509999
+      value: 1.4014
       objectReference: {fileID: 0}
     - target: {fileID: 6252323771361804893, guid: 2733043e92e2f4d7eb534ec4f68223cb,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.29787445
+      value: 0.516
       objectReference: {fileID: 0}
     - target: {fileID: 6252323771361804893, guid: 2733043e92e2f4d7eb534ec4f68223cb,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99434906
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6252323771361804893, guid: 2733043e92e2f4d7eb534ec4f68223cb,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6252323771361804893, guid: 2733043e92e2f4d7eb534ec4f68223cb,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.10616033
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6252323771361804893, guid: 2733043e92e2f4d7eb534ec4f68223cb,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6252323771361804893, guid: 2733043e92e2f4d7eb534ec4f68223cb,
         type: 3}
@@ -3237,7 +3261,7 @@ PrefabInstance:
     - target: {fileID: 6252323771361804893, guid: 2733043e92e2f4d7eb534ec4f68223cb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 12.188
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6252323771361804893, guid: 2733043e92e2f4d7eb534ec4f68223cb,
         type: 3}

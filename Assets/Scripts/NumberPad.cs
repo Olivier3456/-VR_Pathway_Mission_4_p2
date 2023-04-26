@@ -13,6 +13,8 @@ public class NumberPad : MonoBehaviour
     [SerializeField] private AudioClip goodCodeAudioClip;
     [SerializeField] private AudioClip wrongCodeAudioClip;
 
+    [SerializeField] private GameObject keyCard;
+
 
     private int[] codeEntered;
 
@@ -37,7 +39,6 @@ public class NumberPad : MonoBehaviour
             codeEntered[index] = buttonValue;
             index++;
             ChangeCodeDisplayColor(Color.white);
-            Debug.Log(buttonValue);
 
             DisplayCode();
 
@@ -52,11 +53,11 @@ public class NumberPad : MonoBehaviour
                     WrongCode();
                 }
             }
-        }        
+        }
     }
 
     bool CheckCode()
-    {      
+    {
         for (int i = 0; i < goodCode.Length; i++)
         {
             if (goodCode[i] != codeEntered[i])
@@ -80,21 +81,20 @@ public class NumberPad : MonoBehaviour
     }
 
 
-
     void GoodCode()
     {
-        Debug.Log("Bon code !");
         audioSource.PlayOneShot(goodCodeAudioClip);
         ChangeCodeDisplayColor(Color.green);
+        keyCard.SetActive(true);
+        keyCard.GetComponent<Rigidbody>().isKinematic = true;
         goodCodeEntered = true;
     }
 
     void WrongCode()
     {
         index = 0;
-        Debug.Log("Mauvais code !");
         audioSource.PlayOneShot(wrongCodeAudioClip);
-        ChangeCodeDisplayColor(Color.red);        
+        ChangeCodeDisplayColor(Color.red);
     }
 
     void ChangeCodeDisplayColor(Color color)
