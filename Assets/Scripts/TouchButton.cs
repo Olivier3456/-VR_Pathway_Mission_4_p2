@@ -9,7 +9,7 @@ public class TouchButton : XRBaseInteractable
 
     [SerializeField] private int _buttonValue;
 
-    [SerializeField] private Material pressedMat;    
+    [SerializeField] private Material pressedMat;
 
     [SerializeField] private AudioSource audioSource;
 
@@ -18,23 +18,29 @@ public class TouchButton : XRBaseInteractable
     private Material originalMat;
     private Renderer buttonRenderer;
 
+    private XRBaseInteractor handOvering;
+
 
     private void Start()
     {
         buttonRenderer = GetComponent<Renderer>();
 
         numberPad = GameObject.Find("Numberpad").GetComponent<NumberPad>();
-       
+
         originalMat = buttonRenderer.material;
     }
 
     protected override void OnHoverEntered(HoverEnterEventArgs args)
     {
         base.OnHoverEntered(args);
-        
-        buttonRenderer.material = pressedMat;
-        audioSource?.Play();
-        numberPad.ButtonPressed(_buttonValue);
+
+        if (handOvering == null)
+        {
+            handOvering = args.interactorObject as XRBaseInteractor;
+            buttonRenderer.material = pressedMat;
+            audioSource?.Play();
+            numberPad.ButtonPressed(_buttonValue);
+        }
     }
 
 
@@ -42,6 +48,11 @@ public class TouchButton : XRBaseInteractable
     {
         base.OnHoverExited(args);
 
-        buttonRenderer.material = originalMat;
+        if (handOvering != null && args.interactorObject as XRBaseInteractor == handOvering)
+        {
+            handOvering = null;
+
+            buttonRenderer.material = originalMat;
+        }       
     }
 }
