@@ -8,17 +8,31 @@ public class KeyCard : XRGrabInteractable
 {
     private Rigidbody _rb;
 
+    private Vector3 _lastPosition;
+
+    private Vector3 _movementVector;
+    public Vector3 MovementVector { get { return _movementVector; } }
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+
+        _lastPosition = transform.position;
     }
+
+    private void Update()
+    {
+        _movementVector = transform.position - _lastPosition;
+
+        _lastPosition = transform.position;
+    }
+
 
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        StartCoroutine(EjectOverSeconds(1.5f));        
+        StartCoroutine(EjectOverSeconds(1.5f));
     }
 
     public IEnumerator EjectOverSeconds(float seconds)
@@ -38,6 +52,12 @@ public class KeyCard : XRGrabInteractable
     {
         base.OnSelectExited(args);
 
+        _rb.isKinematic = false;
+    }
+
+    protected override void OnSelectEntered(SelectEnterEventArgs args)
+    {
+        base.OnSelectEntered(args);
         _rb.isKinematic = false;
     }
 }
