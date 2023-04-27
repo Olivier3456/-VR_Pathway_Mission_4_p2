@@ -2,12 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
-public class KeyCard : MonoBehaviour
+public class KeyCard : XRGrabInteractable
 {
-    private void OnEnable()
+    private Rigidbody _rb;
+
+
+    private void Start()
     {
-        StartCoroutine(EjectOverSeconds(1.5f));
+        _rb = GetComponent<Rigidbody>();
+    }
+
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        StartCoroutine(EjectOverSeconds(1.5f));        
     }
 
     public IEnumerator EjectOverSeconds(float seconds)
@@ -19,6 +30,14 @@ public class KeyCard : MonoBehaviour
             elapsedTime += Time.deltaTime;
 
             yield return null;
-        }        
+        }
+    }
+
+
+    protected override void OnSelectExited(SelectExitEventArgs args)
+    {
+        base.OnSelectExited(args);
+
+        _rb.isKinematic = false;
     }
 }

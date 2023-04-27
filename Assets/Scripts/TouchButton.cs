@@ -21,6 +21,7 @@ public class TouchButton : XRBaseInteractable
     private XRBaseInteractor handOvering;
 
 
+
     private void Start()
     {
         buttonRenderer = GetComponent<Renderer>();
@@ -38,7 +39,7 @@ public class TouchButton : XRBaseInteractable
         {
             handOvering = args.interactorObject as XRBaseInteractor;
             buttonRenderer.material = pressedMat;
-            audioSource?.Play();
+            audioSource.Play();
             numberPad.ButtonPressed(_buttonValue);
         }
     }
@@ -53,6 +54,6 @@ public class TouchButton : XRBaseInteractable
             handOvering = null;
 
             buttonRenderer.material = originalMat;
-        }       
+        }
     }
 }
