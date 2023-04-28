@@ -23,7 +23,7 @@ public class CardReader : XRSocketInteractor
 
     private bool cardReadOnEntering;
 
-    private float invalidValue = 0.9f;
+    private float invalidValue = 0.98f;
 
     protected override void OnHoverEntering(HoverEnterEventArgs args)
     {
@@ -37,7 +37,8 @@ public class CardReader : XRSocketInteractor
     {
         base.OnHoverExiting(args);
 
-        if (!doorOpen && cardReadOnEntering && VerifyCardMovementAndRotation(args))
+        //if (!doorOpen && cardReadOnEntering && VerifyCardMovementAndRotation(args))
+        if (cardReadOnEntering && VerifyCardMovementAndRotation(args))
         {
             OpenDoor();
         }
@@ -67,16 +68,16 @@ public class CardReader : XRSocketInteractor
     {
         Vector3 cardMovementVector = args.interactableObject.transform.GetComponent<KeyCardMagneticTape>().GetKeyCardMovementVector();
         bool goodCardMovementVector = Vector3.Dot(cardMovementVector.normalized, Vector3.down) > invalidValue;
-        bool goodCardSpeed = cardMovementVector.magnitude > 0.0f && cardMovementVector.magnitude < 1000.0f; // Etalonner les vitesses min et max.
+        bool goodCardSpeed = cardMovementVector.magnitude > 0.0005f && cardMovementVector.magnitude < 0.01f;
 
         Vector3 cardForwardVector = args.interactableObject.transform.forward;
-        bool goodCardForwardVector = AreDirectionsAligned(cardForwardVector, Vector3.down);
+        bool goodCardForwardVector = Vector3.Dot(cardForwardVector, Vector3.down) < -invalidValue;
 
         Vector3 cardRightVector = args.interactableObject.transform.right;
-        bool goodCardRightVector = AreDirectionsAligned(cardRightVector, Vector3.right);
+        bool goodCardRightVector = Vector3.Dot(cardRightVector, Vector3.right) < -invalidValue;
 
         Vector3 cardUpVector = args.interactableObject.transform.up;
-        bool goodCardUpVector = AreDirectionsAligned(cardUpVector, Vector3.forward);
+        bool goodCardUpVector = Vector3.Dot(cardUpVector, Vector3.forward) > invalidValue;
 
 
         Debug.Log("---------------------------------------------------------------------------");
@@ -98,10 +99,10 @@ public class CardReader : XRSocketInteractor
     }
 
 
-    private bool AreDirectionsAligned(Vector3 vector1, Vector3 vector2)
-    {
-        return Vector3.Dot(vector1, vector2) < -invalidValue || Vector3.Dot(vector1, vector2) > invalidValue;   // Une seul sens nécessaire, retirer l'autre.
-    }
+    //private bool AreDirectionsAligned(Vector3 vector1, Vector3 vector2)
+    //{
+    //    return Vector3.Dot(vector1, vector2) < -invalidValue || Vector3.Dot(vector1, vector2) > invalidValue;   // Une seul sens nécessaire, retirer l'autre.
+    //}
 
     IEnumerator LightRed()
     {
