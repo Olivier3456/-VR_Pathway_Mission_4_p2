@@ -1404,6 +1404,13 @@ MonoBehaviour:
   m_InteractableHoverScale: 1
   m_RecycleDelayTime: 1
   audioSource: {fileID: 804325794}
+  doorLockingBar: {fileID: 1167897336}
+  red_emissive_mat: {fileID: 2100000, guid: 35356fdd9fce05042aa79c6ec9b354d4, type: 2}
+  red_mat: {fileID: 2100000, guid: 1fee7b49ad8a6c14ca5a43b22bd18aaa, type: 2}
+  green_emissive_mat: {fileID: 2100000, guid: add47abd8b2462c4db0872ef94f64265, type: 2}
+  green_mat: {fileID: 2100000, guid: 854712e5b10c8df4897a67ee434ed616, type: 2}
+  red_light: {fileID: 1545019413}
+  green_light: {fileID: 1545019412}
 --- !u!82 &804325794
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2203,6 +2210,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 213598002925951555, guid: 505ab3b2ca9f8d943940d674d65aac07,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 395713496640259988, guid: 505ab3b2ca9f8d943940d674d65aac07,
         type: 3}
       propertyPath: m_RootOrder
@@ -2265,6 +2277,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 505ab3b2ca9f8d943940d674d65aac07, type: 3}
+--- !u!1 &1167897336 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 213598002925951555, guid: 505ab3b2ca9f8d943940d674d65aac07,
+    type: 3}
+  m_PrefabInstance: {fileID: 1167897335}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1171732519
 GameObject:
   m_ObjectHideFlags: 0
@@ -2613,6 +2631,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00592b75c913c8440b1b1229fb990ab9, type: 3}
+--- !u!1 &1545019412 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3672754186003045693, guid: 00592b75c913c8440b1b1229fb990ab9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1545019411}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1545019413 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2098206563343811724, guid: 00592b75c913c8440b1b1229fb990ab9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1545019411}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1669961816 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4288908433034720442, guid: e97db2d0c9847b248aa9914c68ccfa8f,

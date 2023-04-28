@@ -13,6 +13,7 @@ public class KeyCard : XRGrabInteractable
     private Vector3 _movementVector;
     public Vector3 MovementVector { get { return _movementVector; } }
 
+
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
