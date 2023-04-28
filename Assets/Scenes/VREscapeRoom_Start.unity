@@ -1404,6 +1404,9 @@ MonoBehaviour:
   m_InteractableHoverScale: 1
   m_RecycleDelayTime: 1
   audioSource: {fileID: 804325794}
+  openDoorAudioClip: {fileID: 8300000, guid: 0013ae7c6d355b24ead8a335afffab69, type: 3}
+  dontOpenDoorAudioClip: {fileID: 8300000, guid: 3a65b1a05a2cf9e4989071a4516aba84,
+    type: 3}
   doorLockingBar: {fileID: 1167897336}
   red_emissive_mat: {fileID: 2100000, guid: 35356fdd9fce05042aa79c6ec9b354d4, type: 2}
   red_mat: {fileID: 2100000, guid: 1fee7b49ad8a6c14ca5a43b22bd18aaa, type: 2}

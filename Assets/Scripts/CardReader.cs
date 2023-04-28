@@ -8,6 +8,8 @@ public class CardReader : XRSocketInteractor
 {
     [Header("CardReader datas")]
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip openDoorAudioClip;
+    [SerializeField] private AudioClip dontOpenDoorAudioClip;
     [SerializeField] private GameObject doorLockingBar;
 
     [SerializeField] private Material red_emissive_mat;
@@ -41,26 +43,31 @@ public class CardReader : XRSocketInteractor
         }
         else if (!doorOpen)
         {
-            StartCoroutine(LightRed());
+            DontOpenDoor();
         }
     }
 
 
     private void OpenDoor()
     {
-        audioSource.Play();
+        audioSource.PlayOneShot(openDoorAudioClip);
         doorLockingBar.SetActive(false);
         green_light.GetComponent<Renderer>().material = green_emissive_mat;
         doorOpen = true;
     }
 
+    private void DontOpenDoor()
+    {
+        StartCoroutine(LightRed());
+        audioSource.PlayOneShot(dontOpenDoorAudioClip);
+    }
 
 
     private bool VerifyCardMovementAndRotation(BaseInteractionEventArgs args)
     {
         Vector3 cardMovementVector = args.interactableObject.transform.GetComponent<KeyCardMagneticTape>().GetKeyCardMovementVector();
         bool goodCardMovementVector = Vector3.Dot(cardMovementVector.normalized, Vector3.down) > invalidValue;
-        bool goodCardSpeed = cardMovementVector.magnitude > 0.0f && cardMovementVector.magnitude < 1000.0f;
+        bool goodCardSpeed = cardMovementVector.magnitude > 0.0f && cardMovementVector.magnitude < 1000.0f; // Etalonner les vitesses min et max.
 
         Vector3 cardForwardVector = args.interactableObject.transform.forward;
         bool goodCardForwardVector = AreDirectionsAligned(cardForwardVector, Vector3.down);
@@ -93,7 +100,7 @@ public class CardReader : XRSocketInteractor
 
     private bool AreDirectionsAligned(Vector3 vector1, Vector3 vector2)
     {
-        return Vector3.Dot(vector1, vector2) < -invalidValue || Vector3.Dot(vector1, vector2) > invalidValue;
+        return Vector3.Dot(vector1, vector2) < -invalidValue || Vector3.Dot(vector1, vector2) > invalidValue;   // Une seul sens nécessaire, retirer l'autre.
     }
 
     IEnumerator LightRed()
