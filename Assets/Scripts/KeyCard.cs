@@ -7,7 +7,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class KeyCard : XRGrabInteractable
 {
     private Rigidbody _rb;
-
+    
     private Vector3 _lastPosition;
 
     private Vector3 _movementVector;
