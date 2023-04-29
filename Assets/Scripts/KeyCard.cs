@@ -61,9 +61,6 @@ public class KeyCard : XRGrabInteractable
         _rb.isKinematic = false;
 
         _handGrabbing = args.interactorObject as XRBaseInteractor;
-
-
-        //Debug.Log("_handGrabbing = " + _handGrabbing.name);
     }
 
     protected override void OnSelectExited(SelectExitEventArgs args)
