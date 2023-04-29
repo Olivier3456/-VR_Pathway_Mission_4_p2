@@ -7,11 +7,15 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class KeyCard : XRGrabInteractable
 {
     private Rigidbody _rb;
-    
+
     private Vector3 _lastPosition;
 
     private Vector3 _movementVector;
     public Vector3 MovementVector { get { return _movementVector; } }
+
+
+    private XRBaseInteractor _handGrabbing;
+    public XRBaseInteractor HandGrabbing { get { return _handGrabbing; } }
 
 
     private void Start()
@@ -49,16 +53,23 @@ public class KeyCard : XRGrabInteractable
     }
 
 
-    protected override void OnSelectExited(SelectExitEventArgs args)
-    {
-        base.OnSelectExited(args);
 
-        _rb.isKinematic = false;
-    }
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
         base.OnSelectEntered(args);
+        _rb.isKinematic = false;
+
+        _handGrabbing = args.interactorObject as XRBaseInteractor;
+
+
+        //Debug.Log("_handGrabbing = " + _handGrabbing.name);
+    }
+
+    protected override void OnSelectExited(SelectExitEventArgs args)
+    {
+        base.OnSelectExited(args);
+
         _rb.isKinematic = false;
     }
 }
