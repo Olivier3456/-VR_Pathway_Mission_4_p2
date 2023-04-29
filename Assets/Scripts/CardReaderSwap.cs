@@ -9,7 +9,7 @@ public class CardReaderSwap : XRSocketInteractor
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip openDoorAudioClip;
     [SerializeField] private AudioClip dontOpenDoorAudioClip;
-    [SerializeField] private GameObject doorLockingBar;    
+    [SerializeField] private GameObject doorLockingBar;
     [SerializeField] private KeyCard keyCard;
     [SerializeField] private Transform attachPoint;
     [SerializeField] private Transform HandGrabbingAttachTransform;
@@ -32,31 +32,30 @@ public class CardReaderSwap : XRSocketInteractor
     private bool doorOpen = false;
     private bool canSnapAgain = true;
 
+    private float cardYpositionWhenEnteringTrigger;
 
 
     private void Update()
     {
-
         if (keyCard.HandGrabbing != null)
         {
-            if (CardInTrigger)
+            if (CardInTrigger && canSnapAgain)
             {
-                if (canSnapAgain)
+                if (cardJustEnterdedInTrigger)
                 {
-                    if (cardJustEnterdedInTrigger)
-                    {
-                        originalHandGrabbingAttachTranformPosition = keyCard.HandGrabbing.attachTransform.localPosition;
-                        originanHandGrabbingAttachTransformRotation = keyCard.HandGrabbing.attachTransform.localRotation;
-                        cardJustEnterdedInTrigger = false;
-                        isHandGrabbingAttachTransformDetached = false;
-                    }
+                    originalHandGrabbingAttachTranformPosition = keyCard.HandGrabbing.attachTransform.localPosition;
+                    originanHandGrabbingAttachTransformRotation = keyCard.HandGrabbing.attachTransform.localRotation;
 
-                    keyCard.HandGrabbing.attachTransform.position = new Vector3(attachPoint.position.x, keyCard.HandGrabbing.attachTransform.position.y, attachPoint.position.z);
-                    keyCard.HandGrabbing.attachTransform.rotation = attachPoint.rotation;
+                    cardYpositionWhenEnteringTrigger = keyCard.transform.position.y;
+
+                    cardJustEnterdedInTrigger = false;
+                    isHandGrabbingAttachTransformDetached = false;
                 }
-                
+
+                keyCard.HandGrabbing.attachTransform.position = new Vector3(attachPoint.position.x, keyCard.HandGrabbing.attachTransform.position.y, attachPoint.position.z);
+                keyCard.HandGrabbing.attachTransform.rotation = attachPoint.rotation;
             }
-            else if (!isHandGrabbingAttachTransformDetached)
+            else if (!isHandGrabbingAttachTransformDetached && canSnapAgain)
             {
                 isHandGrabbingAttachTransformDetached = true;
                 cardJustEnterdedInTrigger = true;
@@ -64,15 +63,14 @@ public class CardReaderSwap : XRSocketInteractor
                 float cardSpeed = keyCard.MovementVector.magnitude / Time.deltaTime;
                 bool goodCardSpeed = cardSpeed > 0.25f && cardSpeed < 1.2f;
 
-                if (goodCardSpeed && !doorOpen)
+                if (goodCardSpeed && !doorOpen && cardYpositionWhenEnteringTrigger > keyCard.transform.position.y + 0.4f)
                 {
                     OpenDoor();
                 }
-                else if (!doorOpen)
+                else if (!doorOpen && canSnapAgain)
                 {
                     DontOpenDoor();
                 }
-
 
                 keyCard.HandGrabbing.attachTransform.localPosition = originalHandGrabbingAttachTranformPosition;
                 keyCard.HandGrabbing.attachTransform.localRotation = originanHandGrabbingAttachTransformRotation;
@@ -85,7 +83,7 @@ public class CardReaderSwap : XRSocketInteractor
 
 
 
-   
+
 
 
     private void OpenDoor()
