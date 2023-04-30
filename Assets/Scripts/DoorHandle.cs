@@ -71,7 +71,7 @@ public class DoorHandle : XRBaseInteractable
         }
         else
         {
-            desiredDoorPosition = _door.transform.position + Vector3.Lerp(Vector3.zero, _forceToApplyToTheDoor, 0.01f);
+            desiredDoorPosition = _door.transform.position + Vector3.Lerp(Vector3.zero, _forceToApplyToTheDoor, Time.deltaTime);
         }  
 
         _distanceFromDesiredPositionToStartPosition = Vector3.Distance(_doorStartPosition, desiredDoorPosition);
