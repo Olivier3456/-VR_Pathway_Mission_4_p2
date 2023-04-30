@@ -61,13 +61,14 @@ public class CardReaderSwap : XRSocketInteractor
                 cardJustEnterdedInTrigger = true;
 
                 float cardSpeed = keyCard.MovementVector.magnitude / Time.deltaTime;
-                bool goodCardSpeed = cardSpeed > 0.25f && cardSpeed < 1.2f;
+                bool goodCardSpeed = cardSpeed > 0.5f && cardSpeed < 2.2f;
+                Debug.Log("cardSpeed = " + cardSpeed);
 
-                if (goodCardSpeed && !doorOpen && cardYpositionWhenEnteringTrigger > keyCard.transform.position.y + 0.4f)
+                if (goodCardSpeed && !doorOpen && cardYpositionWhenEnteringTrigger > keyCard.transform.position.y + 0.35f)
                 {
                     OpenDoor();
                 }
-                else if (!doorOpen && canSnapAgain)
+                else if (!doorOpen && canSnapAgain && Mathf.Abs(cardYpositionWhenEnteringTrigger - keyCard.transform.position.y) > 0.1f)
                 {
                     DontOpenDoor();
                 }
@@ -79,11 +80,6 @@ public class CardReaderSwap : XRSocketInteractor
             }
         }
     }
-
-
-
-
-
 
 
     private void OpenDoor()
