@@ -10,6 +10,7 @@ public class CardReaderSwap : XRSocketInteractor
     [SerializeField] private AudioClip openDoorAudioClip;
     [SerializeField] private AudioClip dontOpenDoorAudioClip;
     [SerializeField] private GameObject doorLockingBar;
+    [SerializeField] private DoorHandle doorHandle;
     [SerializeField] private KeyCard keyCard;
     [SerializeField] private Transform attachPoint;
     [SerializeField] private Transform HandGrabbingAttachTransform;
@@ -30,6 +31,7 @@ public class CardReaderSwap : XRSocketInteractor
     private Quaternion originanHandGrabbingAttachTransformRotation;
 
     private bool doorOpen = false;
+
     private bool canSnapAgain = true;
 
     private float cardYpositionWhenEnteringTrigger;
@@ -88,6 +90,7 @@ public class CardReaderSwap : XRSocketInteractor
         doorLockingBar.SetActive(false);
         green_light.GetComponent<Renderer>().material = green_emissive_mat;
         doorOpen = true;
+        doorHandle.DoorCanOpen = true;
     }
 
     private void DontOpenDoor()

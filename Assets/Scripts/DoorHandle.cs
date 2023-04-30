@@ -7,7 +7,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class DoorHandle : XRBaseInteractable
 {
     [Header("DoorHandle datas")]
-    [SerializeField] private GameObject _door;
+    [SerializeField] private GameObject _door;    
     [SerializeField] float _maxOpeningDistance = 0.9f;
 
     private Vector3 _doorStartPosition;
@@ -21,73 +21,78 @@ public class DoorHandle : XRBaseInteractable
 
     [SerializeField] private float inertia = 10;
 
+    private float _distanceFromDesiredPositionToStartPosition = 0;
 
-    Vector3 doorLastPosition;
-    Vector3 doorLastMovement;
+    private Vector3 _forceToApplyToTheDoor;
+
+    public bool DoorCanOpen = false;
+
+
+    Vector3 _doorLastPosition;
+    Vector3 _doorLastMovement;
 
     private void Start()
     {
         _doorStartPosition = _door.transform.position;
 
+        _forceToApplyToTheDoor = Vector3.zero;
 
-
-        doorLastPosition = _door.transform.position;
-        doorLastMovement = Vector3.zero;
+        _doorLastPosition = _door.transform.position;
+        _doorLastMovement = Vector3.zero;
     }
 
 
     private void Update()
     {
-        if (_handGrabbing != null)
+        if (_handGrabbing != null && DoorCanOpen)
         {
             _fromHandleToHandVector = _handGrabbing.transform.position - transform.position;
 
-            Vector3 forceToApplyToTheDoor = Vector3.Project(_fromHandleToHandVector, transform.right);
+            _forceToApplyToTheDoor = Vector3.Project(_fromHandleToHandVector, transform.right);                 
 
-            //_debugSphere.transform.position = transform.position + forceToApplyToTheDoor;
-
-            //Vector3 desiredDoorPosition = _door.transform.position + Vector3.Lerp(Vector3.zero, forceToApplyToTheDoor, Time.deltaTime);
-
-
-            float lastMovementInertia = doorLastMovement.magnitude - (doorLastMovement.magnitude * (Time.deltaTime / inertia));
-
-            Vector3 desiredDoorPosition = _door.transform.position +
-                                          (doorLastMovement * lastMovementInertia) +
-                                          Vector3.Lerp(Vector3.zero, forceToApplyToTheDoor, Time.deltaTime / inertia);
-
-
-
-
-
-
-
-            float distanceFromDesiredPositionToStartPosition = Vector3.Distance(_doorStartPosition, desiredDoorPosition);
-
-            if (distanceFromDesiredPositionToStartPosition <= _maxOpeningDistance)
-            {
-                //Pour que la porte soit ne puisse pas aller plus à gauche que son point de départ:
-                if (_lastDistanceToStartPosition < distanceFromDesiredPositionToStartPosition
-                    && Vector3.Dot(forceToApplyToTheDoor.normalized, transform.right) > 0)
-                {
-                    return;
-                }
-
-                _door.transform.position = desiredDoorPosition;
-
-                _lastDistanceToStartPosition = distanceFromDesiredPositionToStartPosition;
-
-                doorLastMovement = _door.transform.position - doorLastPosition;
-                doorLastPosition = _door.transform.position;
-
-            }
+            MoveDoor(_forceToApplyToTheDoor);            
         }
-        else if (doorLastMovement.magnitude > 0.001f)
+        else if (_doorLastMovement.magnitude > 0.1f * Time.deltaTime)
         {
-
+            MoveDoor(Vector3.zero);
         }
-
     }
 
+
+
+    private void MoveDoor(Vector3 forceToApply)
+    {
+        Vector3 desiredDoorPosition;
+
+        if (forceToApply == Vector3.zero)
+        {
+            Vector3 lastMovementInertia = _doorLastMovement * (1 - (Time.deltaTime / inertia));
+            desiredDoorPosition = _door.transform.position + lastMovementInertia;           
+        }
+        else
+        {
+            desiredDoorPosition = _door.transform.position + Vector3.Lerp(Vector3.zero, _forceToApplyToTheDoor, 0.01f);
+        }  
+
+        _distanceFromDesiredPositionToStartPosition = Vector3.Distance(_doorStartPosition, desiredDoorPosition);
+
+        if (_distanceFromDesiredPositionToStartPosition <= _maxOpeningDistance)
+        {
+            //Pour que la porte soit ne puisse pas aller plus à gauche que son point de départ :
+            if (_lastDistanceToStartPosition < _distanceFromDesiredPositionToStartPosition
+                && Vector3.Dot(_forceToApplyToTheDoor.normalized, transform.right) > 0)
+            {
+                return;
+            }
+
+            _door.transform.position = desiredDoorPosition;
+
+            _lastDistanceToStartPosition = _distanceFromDesiredPositionToStartPosition;
+
+            _doorLastMovement = _door.transform.position - _doorLastPosition;
+            _doorLastPosition = _door.transform.position;
+        }
+    }
 
 
 
@@ -102,7 +107,5 @@ public class DoorHandle : XRBaseInteractable
     {
         base.OnSelectExited(args);
         _handGrabbing = null;
-
-
     }
 }
