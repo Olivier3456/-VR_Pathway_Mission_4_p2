@@ -36,7 +36,10 @@ public class DoorHandle : XRBaseInteractable
 
             Vector3 movementToApplyAtTheDoor = Vector3.Project(_fromHandleToHandVector, transform.right);
 
-            _door.transform.position += movementToApplyAtTheDoor;
+
+            _door.transform.position += Vector3.Lerp(Vector3.zero, movementToApplyAtTheDoor, Time.deltaTime);
+
+            // door.transform.position += movementToApplyAtTheDoor;
             //_debugSphere.transform.position = transform.position + movementToApplyAtTheDoor;
 
 
