@@ -693,9 +693,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _door: {fileID: 1667845994}
-  _openingDistance: 1
-  _openingDirection: {x: 0, y: 0, z: -1}
+  _maxOpeningDistance: 0.9
   _debugSphere: {fileID: 1241113145}
+  inertia: 2
 --- !u!1001 &234995412
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4187,17 +4187,17 @@ PrefabInstance:
     - target: {fileID: 5316928602975742148, guid: 741f6444ed531784f9baf16134823c76,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.433
+      value: 1.964
       objectReference: {fileID: 0}
     - target: {fileID: 5316928602975742148, guid: 741f6444ed531784f9baf16134823c76,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4996805
+      value: 1.449
       objectReference: {fileID: 0}
     - target: {fileID: 5316928602975742148, guid: 741f6444ed531784f9baf16134823c76,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.33697248
+      value: -0.059
       objectReference: {fileID: 0}
     - target: {fileID: 5316928602975742148, guid: 741f6444ed531784f9baf16134823c76,
         type: 3}

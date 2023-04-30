@@ -24,7 +24,7 @@ public class CardReaderSwap : XRSocketInteractor
 
     [HideInInspector] public bool CardInTrigger = false;
     private bool isHandGrabbingAttachTransformDetached = true;
-    private bool cardJustEnterdedInTrigger = true;
+    private bool cardJustEnteredInTrigger = true;
 
     private Vector3 originalHandGrabbingAttachTranformPosition;
     private Quaternion originanHandGrabbingAttachTransformRotation;
@@ -41,14 +41,14 @@ public class CardReaderSwap : XRSocketInteractor
         {
             if (CardInTrigger && canSnapAgain)
             {
-                if (cardJustEnterdedInTrigger)
+                if (cardJustEnteredInTrigger)
                 {
                     originalHandGrabbingAttachTranformPosition = keyCard.HandGrabbing.attachTransform.localPosition;
                     originanHandGrabbingAttachTransformRotation = keyCard.HandGrabbing.attachTransform.localRotation;
 
                     cardYpositionWhenEnteringTrigger = keyCard.transform.position.y;
 
-                    cardJustEnterdedInTrigger = false;
+                    cardJustEnteredInTrigger = false;
                     isHandGrabbingAttachTransformDetached = false;
                 }
 
@@ -58,7 +58,7 @@ public class CardReaderSwap : XRSocketInteractor
             else if (!isHandGrabbingAttachTransformDetached && canSnapAgain)
             {
                 isHandGrabbingAttachTransformDetached = true;
-                cardJustEnterdedInTrigger = true;
+                cardJustEnteredInTrigger = true;
 
                 float cardSpeed = keyCard.MovementVector.magnitude / Time.deltaTime;
                 bool goodCardSpeed = cardSpeed > 0.5f && cardSpeed < 2.2f;
