@@ -15,7 +15,9 @@ public class DoorHandle : XRBaseInteractable
     [SerializeField][Range(0, 1)] private float _reboundStrength = 0.5f;
     public bool DoorCanOpen = false;
 
-    private XRBaseInteractor _handGrabbing;
+    private XRBaseController _handGrabbing;
+    
+
     private Vector3 _lastDoorMovement = Vector3.zero;
     private Vector3 _movementMiddlePoint;
 
@@ -27,13 +29,12 @@ public class DoorHandle : XRBaseInteractable
         _audioSource.volume = 0;
     }
 
-
-
-
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
         base.OnSelectEntered(args);
-        _handGrabbing = args.interactorObject as XRBaseInteractor;
+
+        var controllerInteractor = args.interactorObject as XRBaseControllerInteractor;
+        _handGrabbing = controllerInteractor.xrController;
 
         if (DoorCanOpen)
         {
@@ -41,7 +42,7 @@ public class DoorHandle : XRBaseInteractable
             _audioSource.Play();
         }
     }
-
+        
     protected override void OnSelectExited(SelectExitEventArgs args)
     {
         base.OnSelectExited(args);
@@ -81,6 +82,11 @@ public class DoorHandle : XRBaseInteractable
             _lastDoorMovement = -_lastDoorMovement * _reboundStrength;
 
             _audioSource.PlayOneShot(_reboundAudioClip);
+
+            if (_handGrabbing != null)
+            {
+                _handGrabbing.SendHapticImpulse(desiredDoorMovement.magnitude * 100, 0.1f);
+            }
         }
         else
         {
@@ -89,7 +95,7 @@ public class DoorHandle : XRBaseInteractable
 
             _audioSource.volume = desiredDoorMovement.magnitude * 100;
 
-
+           
             
 
         }
