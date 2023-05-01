@@ -695,7 +695,7 @@ MonoBehaviour:
   _door: {fileID: 1667845994}
   _maxOpeningDistance: 0.9
   _debugSphere: {fileID: 1241113145}
-  inertia: 0.5
+  reboundStrength: 0.5
   DoorCanOpen: 0
   doorMiddleMovement: {fileID: 2104322961}
 --- !u!1001 &234995412

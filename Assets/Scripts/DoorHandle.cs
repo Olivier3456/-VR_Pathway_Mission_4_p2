@@ -15,34 +15,36 @@ public class DoorHandle : XRBaseInteractable
     private Vector3 _doorStartPosition;
     private XRBaseInteractor _handGrabbing;
 
-    private Vector3 _fromHandleToHandVector;
+    //private Vector3 _fromHandleToHandVector;
 
     private float _lastDistanceToStartPosition = 0;
 
     [SerializeField] private GameObject _debugSphere;
 
-    [SerializeField] private float inertia = 0.5f;
+    //[SerializeField] private float inertia = 0.5f;
 
-    private float _distanceFromDesiredPositionToStartPosition = 0;
-
-    private Vector3 _forceToApplyToTheDoor;
+    [SerializeField][Range(0, 1)] private float reboundStrength = 0.5f;
+        
+    //private Vector3 _forceToApplyToTheDoor;
 
     public bool DoorCanOpen = false;
 
     [SerializeField] private Transform doorMiddleMovement;
 
+    private Vector3 _lastDoorMovement = Vector3.zero;
 
-    Vector3 _doorLastPosition;
-    Vector3 _doorLastMovement;
+
+    //Vector3 _doorLastPosition;
+    //Vector3 _doorLastMovement;
 
     private void Start()
     {
         _doorStartPosition = _door.transform.position;
 
-        _forceToApplyToTheDoor = Vector3.zero;
+        //_forceToApplyToTheDoor = Vector3.zero;
 
-        _doorLastPosition = _door.transform.position;
-        _doorLastMovement = Vector3.zero;
+        //_doorLastPosition = _door.transform.position;
+        //_doorLastMovement = Vector3.zero;
     }
 
 
@@ -50,10 +52,8 @@ public class DoorHandle : XRBaseInteractable
     {
         if (_handGrabbing != null && DoorCanOpen)
         {
-            _fromHandleToHandVector = _handGrabbing.transform.position - transform.position;
-
-            _forceToApplyToTheDoor = Vector3.Project(_fromHandleToHandVector, transform.right);
-
+            Vector3 _fromHandleToHandVector = _handGrabbing.transform.position - transform.position;
+            Vector3 _forceToApplyToTheDoor = Vector3.Project(_fromHandleToHandVector, transform.right);
             MoveDoor(_forceToApplyToTheDoor);
         }
         //else if (_doorLastMovement.magnitude > 0.1f * Time.deltaTime)
@@ -62,7 +62,7 @@ public class DoorHandle : XRBaseInteractable
         //}
 
 
-        else if (doorMovement.magnitude > 0.01f * Time.deltaTime)
+        else if (_lastDoorMovement.magnitude > 0.01f * Time.deltaTime)   // To apply inertia when the handle is not grabbed.
         {
             MoveDoor(Vector3.zero);
         }
@@ -70,31 +70,27 @@ public class DoorHandle : XRBaseInteractable
 
 
 
-    private Vector3 doorMovement = Vector3.zero;
-    Vector3 lastDoorMovement = Vector3.zero;
+    
+   
     private void MoveDoor(Vector3 forceToApply)
     {
         // Inertia + force applied to the door by the hand of the player:
-        doorMovement = lastDoorMovement * (1 - (Time.deltaTime / 0.5f)) + Vector3.Lerp(Vector3.zero, forceToApply, Time.deltaTime * 0.03f);
-        Vector3 desiredDoorPosition = _door.transform.position + doorMovement;
+        Vector3 desiredDoorMovement = _lastDoorMovement * (1 - (Time.deltaTime / 0.5f)) + Vector3.Lerp(Vector3.zero, forceToApply, Time.deltaTime * 0.03f);
+        Vector3 desiredDoorPosition = _door.transform.position + desiredDoorMovement;
+        float distanceFromDesiredPositionToStartPosition = Vector3.Distance(_doorStartPosition, desiredDoorPosition);
 
-        _distanceFromDesiredPositionToStartPosition = Vector3.Distance(_doorStartPosition, desiredDoorPosition);
-
-        if (_distanceFromDesiredPositionToStartPosition > _maxOpeningDistance && _distanceFromDesiredPositionToStartPosition > _lastDistanceToStartPosition)
-        {
-            lastDoorMovement = Vector3.zero;
-            Debug.Log("La porte ne peut pas aller plus loin.");
+        if (distanceFromDesiredPositionToStartPosition > _maxOpeningDistance && distanceFromDesiredPositionToStartPosition > _lastDistanceToStartPosition)
+        {            
+            _lastDoorMovement = -_lastDoorMovement * reboundStrength;
         }
         else
         { 
             _door.transform.position = desiredDoorPosition;
 
-            _lastDistanceToStartPosition = _distanceFromDesiredPositionToStartPosition;
+            _lastDistanceToStartPosition = distanceFromDesiredPositionToStartPosition;
 
-            lastDoorMovement = doorMovement;            
-        }
-
-        
+            _lastDoorMovement = desiredDoorMovement;
+        }        
     }
 
 
