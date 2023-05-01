@@ -9,6 +9,7 @@ public class DoorHandle : XRBaseInteractable
 {
     [Header("DoorHandle datas")]
     [SerializeField] private GameObject _door;
+    [SerializeField] private AudioSource _audioSource;
     [SerializeField] private float _maxOpeningDistance = 0.9f;
     [SerializeField][Range(0, 1)] private float _reboundStrength = 0.5f;
     public bool DoorCanOpen = false;
@@ -21,14 +22,23 @@ public class DoorHandle : XRBaseInteractable
     {
         _maxOpeningDistance *= 0.5f;
         _movementMiddlePoint = _door.transform.position + (-transform.right * _maxOpeningDistance);
+
+        _audioSource.volume = 0;
     }
+
+
+
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
         base.OnSelectEntered(args);
         _handGrabbing = args.interactorObject as XRBaseInteractor;
 
-        if (DoorCanOpen) StartCoroutine(HandleGrabbed());
+        if (DoorCanOpen)
+        {
+            StartCoroutine(MoveDoorWithHandleGrabbed());   // => Apply the hand traction + inertia of previous movement.
+            _audioSource.Play();
+        }
     }
 
     protected override void OnSelectExited(SelectExitEventArgs args)
@@ -36,25 +46,26 @@ public class DoorHandle : XRBaseInteractable
         base.OnSelectExited(args);
         _handGrabbing = null;
 
-        if (DoorCanOpen) StartCoroutine(HandleNotGrabbed());
+        if (DoorCanOpen) StartCoroutine(MoveDoorWithoutHandleGrabbed());   // => Apply the inertia of the previous door movement when the handle is released.
     }
 
-    IEnumerator HandleGrabbed()
+    IEnumerator MoveDoorWithHandleGrabbed()
     {
         if (_handGrabbing == null) yield break;
         Vector3 _fromHandleToHandVector = _handGrabbing.transform.position - transform.position;
         Vector3 _forceToApplyToTheDoor = Vector3.Project(_fromHandleToHandVector, transform.right);
         MoveDoor(_forceToApplyToTheDoor);
         yield return null;
-        StartCoroutine(HandleGrabbed());
+        StartCoroutine(MoveDoorWithHandleGrabbed());        // This coroutine loops until the handle is released.
     }
 
-    IEnumerator HandleNotGrabbed()
+    IEnumerator MoveDoorWithoutHandleGrabbed()
     {
         if (_handGrabbing != null) yield break;
         MoveDoor(Vector3.zero);
         yield return null;
-        if (_lastDoorMovement.magnitude > 0.01f * Time.deltaTime) StartCoroutine(HandleNotGrabbed());
+        if (_lastDoorMovement.magnitude > 0.01f * Time.deltaTime) StartCoroutine(MoveDoorWithoutHandleGrabbed());   // This coroutine loops until the movement inertia is near to zero.
+        else _audioSource.Stop();
     }
 
     private void MoveDoor(Vector3 forceToApply)
@@ -72,6 +83,8 @@ public class DoorHandle : XRBaseInteractable
         {
             _door.transform.position = desiredDoorPosition;
             _lastDoorMovement = desiredDoorMovement;
+
+            _audioSource.volume = desiredDoorMovement.magnitude * 100;            
         }
     }
 }
