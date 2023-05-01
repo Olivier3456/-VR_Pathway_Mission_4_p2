@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class DoorHandle : XRBaseInteractable
 {
     [Header("DoorHandle datas")]
-    [SerializeField] private GameObject _door;    
+    [SerializeField] private GameObject _door;
     [SerializeField] float _maxOpeningDistance = 0.9f;
 
     private Vector3 _doorStartPosition;
@@ -19,13 +21,15 @@ public class DoorHandle : XRBaseInteractable
 
     [SerializeField] private GameObject _debugSphere;
 
-    [SerializeField] private float inertia = 10;
+    [SerializeField] private float inertia = 0.5f;
 
     private float _distanceFromDesiredPositionToStartPosition = 0;
 
     private Vector3 _forceToApplyToTheDoor;
 
     public bool DoorCanOpen = false;
+
+    [SerializeField] private Transform doorMiddleMovement;
 
 
     Vector3 _doorLastPosition;
@@ -48,11 +52,17 @@ public class DoorHandle : XRBaseInteractable
         {
             _fromHandleToHandVector = _handGrabbing.transform.position - transform.position;
 
-            _forceToApplyToTheDoor = Vector3.Project(_fromHandleToHandVector, transform.right);                 
+            _forceToApplyToTheDoor = Vector3.Project(_fromHandleToHandVector, transform.right);
 
-            MoveDoor(_forceToApplyToTheDoor);            
+            MoveDoor(_forceToApplyToTheDoor);
         }
-        else if (_doorLastMovement.magnitude > 0.1f * Time.deltaTime)
+        //else if (_doorLastMovement.magnitude > 0.1f * Time.deltaTime)
+        //{
+        //    MoveDoor(Vector3.zero);
+        //}
+
+
+        else if (doorMovement.magnitude > 0.01f * Time.deltaTime)
         {
             MoveDoor(Vector3.zero);
         }
@@ -60,39 +70,69 @@ public class DoorHandle : XRBaseInteractable
 
 
 
+    private Vector3 doorMovement = Vector3.zero;
+    Vector3 lastDoorMovement = Vector3.zero;
     private void MoveDoor(Vector3 forceToApply)
     {
-        Vector3 desiredDoorPosition;
-
-        if (forceToApply == Vector3.zero)
-        {
-            Vector3 lastMovementInertia = _doorLastMovement * (1 - (Time.deltaTime / inertia));
-            desiredDoorPosition = _door.transform.position + lastMovementInertia;           
-        }
-        else
-        {
-            desiredDoorPosition = _door.transform.position + Vector3.Lerp(Vector3.zero, _forceToApplyToTheDoor, Time.deltaTime);
-        }  
+        // Inertia + force applied to the door by the hand of the player:
+        doorMovement = lastDoorMovement * (1 - (Time.deltaTime / 0.5f)) + Vector3.Lerp(Vector3.zero, forceToApply, Time.deltaTime * 0.03f);
+        Vector3 desiredDoorPosition = _door.transform.position + doorMovement;
 
         _distanceFromDesiredPositionToStartPosition = Vector3.Distance(_doorStartPosition, desiredDoorPosition);
 
-        if (_distanceFromDesiredPositionToStartPosition <= _maxOpeningDistance)
+        if (_distanceFromDesiredPositionToStartPosition > _maxOpeningDistance && _distanceFromDesiredPositionToStartPosition > _lastDistanceToStartPosition)
         {
-            //Pour que la porte soit ne puisse pas aller plus à gauche que son point de départ :
-            if (_lastDistanceToStartPosition < _distanceFromDesiredPositionToStartPosition
-                && Vector3.Dot(_forceToApplyToTheDoor.normalized, transform.right) > 0)
-            {
-                return;
-            }
-
+            lastDoorMovement = Vector3.zero;
+            Debug.Log("La porte ne peut pas aller plus loin.");
+        }
+        else
+        { 
             _door.transform.position = desiredDoorPosition;
 
             _lastDistanceToStartPosition = _distanceFromDesiredPositionToStartPosition;
 
-            _doorLastMovement = _door.transform.position - _doorLastPosition;
-            _doorLastPosition = _door.transform.position;
+            lastDoorMovement = doorMovement;            
         }
+
+        
     }
+
+
+
+
+    //private void MoveDoor(Vector3 forceToApply)
+    //{
+    //    Vector3 desiredDoorPosition;
+
+    //    if (forceToApply == Vector3.zero)
+    //    {
+    //        Vector3 lastMovementInertia = _doorLastMovement * (1 - (Time.deltaTime / inertia));
+    //        desiredDoorPosition = _door.transform.position + lastMovementInertia;           
+    //    }
+    //    else
+    //    {
+    //        desiredDoorPosition = _door.transform.position + Vector3.Lerp(Vector3.zero, _forceToApplyToTheDoor, Time.deltaTime);
+    //    }  
+
+    //    _distanceFromDesiredPositionToStartPosition = Vector3.Distance(_doorStartPosition, desiredDoorPosition);
+
+    //    if (_distanceFromDesiredPositionToStartPosition <= _maxOpeningDistance)
+    //    {
+    //        //Pour que la porte soit ne puisse pas aller plus à gauche que son point de départ :
+    //        if (_lastDistanceToStartPosition < _distanceFromDesiredPositionToStartPosition
+    //            && Vector3.Dot(_forceToApplyToTheDoor.normalized, transform.right) > 0)
+    //        {
+    //            return;
+    //        }
+
+    //        _door.transform.position = desiredDoorPosition;
+
+    //        _lastDistanceToStartPosition = _distanceFromDesiredPositionToStartPosition;
+
+    //        _doorLastMovement = _door.transform.position - _doorLastPosition;
+    //        _doorLastPosition = _door.transform.position;
+    //    }
+    //}
 
 
 
