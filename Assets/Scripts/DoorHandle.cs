@@ -95,9 +95,14 @@ public class DoorHandle : XRBaseInteractable
 
             _audioSource.volume = desiredDoorMovement.magnitude * 100;
 
-           
-            
 
+            if (_handGrabbing != null)
+            {
+                float vibrationsStrength = 1 - desiredDoorMovement.magnitude * 200;
+                if (vibrationsStrength > 0.1f)
+                _handGrabbing.SendHapticImpulse(vibrationsStrength, 0.1f);
+                else _handGrabbing.SendHapticImpulse(0.1f, 0.1f);
+            }
         }
     }
 }
