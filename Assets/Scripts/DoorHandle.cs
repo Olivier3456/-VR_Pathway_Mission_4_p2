@@ -10,6 +10,7 @@ public class DoorHandle : XRBaseInteractable
     [Header("DoorHandle datas")]
     [SerializeField] private GameObject _door;
     [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _reboundAudioClip;
     [SerializeField] private float _maxOpeningDistance = 0.9f;
     [SerializeField][Range(0, 1)] private float _reboundStrength = 0.5f;
     public bool DoorCanOpen = false;
@@ -78,13 +79,19 @@ public class DoorHandle : XRBaseInteractable
         if (distanceFromDesiredPositionToMovementMiddlePoint > _maxOpeningDistance)
         {
             _lastDoorMovement = -_lastDoorMovement * _reboundStrength;
+
+            _audioSource.PlayOneShot(_reboundAudioClip);
         }
         else
         {
             _door.transform.position = desiredDoorPosition;
             _lastDoorMovement = desiredDoorMovement;
 
-            _audioSource.volume = desiredDoorMovement.magnitude * 100;            
+            _audioSource.volume = desiredDoorMovement.magnitude * 100;
+
+
+            
+
         }
     }
 }

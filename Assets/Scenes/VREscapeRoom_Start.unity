@@ -694,6 +694,7 @@ MonoBehaviour:
       m_Calls: []
   _door: {fileID: 1667845994}
   _audioSource: {fileID: 1667845996}
+  _reboundAudioClip: {fileID: 8300000, guid: d2abc381727e94140b8413122ec0bc98, type: 3}
   _maxOpeningDistance: 0.9
   _reboundStrength: 0.5
   DoorCanOpen: 0
